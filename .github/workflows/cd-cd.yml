@@ -1,0 +1,47 @@
+name: Pipeline CI/CD
+
+on: 
+    push:
+        branches:
+            - main
+
+jobs:
+
+        testes:
+            name: Executar testes
+            runs-on: ubuntu-latest
+
+            steps:
+                - name: Baixar codigo do repositório 
+                  uses: actions/checkout@v6
+
+                - name: Configurar Python
+                  uses: actions/setup-python@v5
+                  with:
+                    python-version: "3.12"
+
+                - name: Atualizar pip
+                  run: python -m pip install --upgrade pip
+
+                - name: Instalar Dependências
+                  run: pip install -r requirementes.txt
+
+                - name: Executar testes
+                  run: pytest -v
+            
+        deploy: 
+
+            name: Deploy
+            runs-on: ubuntu-latest
+
+            needs: testes
+
+            if: github.ref == 'refs/heads/main'
+
+            steps: 
+                - name: Realizar deploy 
+                  run:
+                        echo "======================="
+                        echo "TESTES ARPOVADOS!"
+                        echo "Aqui seria o deploy"
+                
